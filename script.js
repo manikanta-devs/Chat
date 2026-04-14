@@ -1,8 +1,4 @@
 // DecisionOS - Main Application Script
-// Initialize the app when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-    App.init();
-});
 
 const App = {
     currentView: 'homeView',
@@ -146,8 +142,10 @@ const App = {
 
         // Update focus time
         const timerStats = Storage.getTimerStats();
-        const hours = Math.floor(timerStats.totalFocusMinutes / 60);
-        document.getElementById('todayFocusTime').textContent = `${hours}h`;
+        const totalMins = timerStats.totalFocusMinutes;
+        const hours = Math.floor(totalMins / 60);
+        const mins = totalMins % 60;
+        document.getElementById('todayFocusTime').textContent = hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
 
         // Update tasks completed
         const tasks = Storage.getTasks();
@@ -173,7 +171,7 @@ const App = {
 // Service Worker registration for offline support (optional)
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
+        navigator.serviceWorker.register('./sw.js')
             .then(registration => {
                 console.log('✅ Service Worker registered');
             })
@@ -294,3 +292,20 @@ function formatDate(dateString) {
 // Add these utilities to global scope
 window.formatTime = formatTime;
 window.formatDate = formatDate;
+
+// Utility: Escape HTML to prevent XSS
+function escapeHtml(str) {
+    if (typeof str !== 'string') return '';
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+window.escapeHtml = escapeHtml;
+
+// Initialize the app when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    App.init();
+});

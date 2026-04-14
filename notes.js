@@ -92,17 +92,19 @@ const Notes = {
         notesList.innerHTML = notes.map(note => {
             const date = new Date(note.createdAt);
             const dateStr = date.toLocaleDateString();
-            
+            const safeTitle = escapeHtml(note.title);
+            const safeContent = escapeHtml(note.content);
+
             return `
                 <div class="note-card" onclick="Notes.openNoteModal('${note.id}')">
                     <div class="note-header">
-                        <div class="note-title">${note.title}</div>
+                        <div class="note-title">${safeTitle}</div>
                         <button class="note-delete" 
                                 onclick="event.stopPropagation(); Notes.deleteNote('${note.id}')">
                             &times;
                         </button>
                     </div>
-                    <div class="note-content">${note.content}</div>
+                    <div class="note-content">${safeContent}</div>
                     <div class="note-date">${dateStr}</div>
                 </div>
             `;

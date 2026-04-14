@@ -1,19 +1,20 @@
 // Service Worker for Offline Support
-const CACHE_NAME = 'decisionos-v1';
+const CACHE_NAME = 'decisionos-v2';
 const urlsToCache = [
-    '/',
-    '/index.html',
-    '/style.css',
-    '/script.js',
-    '/data/knowledge.js',
-    '/modules/storage.js',
-    '/modules/chat.js',
-    '/modules/planner.js',
-    '/modules/timer.js',
-    '/modules/notes.js',
-    '/modules/progress.js',
-    '/modules/goals.js',
-    '/modules/resume.js'
+    './',
+    './index.html',
+    './style.css',
+    './script.js',
+    './knowledge.js',
+    './storage.js',
+    './chat.js',
+    './planner.js',
+    './timer.js',
+    './notes.js',
+    './progress.js',
+    './goals.js',
+    './resume.js',
+    './manifest.json'
 ];
 
 // Install event - cache files

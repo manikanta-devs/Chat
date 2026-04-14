@@ -88,19 +88,22 @@ const Planner = {
             return;
         }
 
-        tasksList.innerHTML = tasks.map(task => `
+        tasksList.innerHTML = tasks.map(task => {
+            const safeTitle = escapeHtml(task.title);
+            return `
             <div class="task-item ${task.completed ? 'completed' : ''}" data-task-id="${task.id}">
                 <div class="task-checkbox ${task.completed ? 'checked' : ''}" 
                      onclick="Planner.toggleTask('${task.id}')">
                 </div>
                 <div class="task-content">
-                    <div class="task-title">${task.title}</div>
+                    <div class="task-title">${safeTitle}</div>
                     ${task.time ? `<div class="task-time">⏰ ${task.time}</div>` : ''}
                 </div>
                 <div class="task-priority ${task.priority}">${task.priority}</div>
                 <button class="task-delete" onclick="Planner.deleteTask('${task.id}')">&times;</button>
             </div>
-        `).join('');
+        `;
+        }).join('');
 
         // Update stats
         this.updateStats();
@@ -170,7 +173,7 @@ const Planner = {
                 <div class="task-time" style="font-weight: 600; color: var(--primary);">
                     ${task.time}
                 </div>
-                <div class="task-title">${task.title}</div>
+                <div class="task-title">${escapeHtml(task.title)}</div>
             </div>
         `).join('');
     },

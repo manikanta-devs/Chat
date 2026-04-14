@@ -88,10 +88,10 @@ const Resume = {
             'Your skills...';
         document.getElementById('previewSkills').textContent = skills;
 
-        // Update experience (preserve line breaks)
+        // Update experience (preserve line breaks, escape HTML first)
         const experience = data.experience || 'Your experience...';
-        document.getElementById('previewExperience').innerHTML = 
-            experience.replace(/\n/g, '<br>');
+        document.getElementById('previewExperience').innerHTML =
+            escapeHtml(experience).replace(/\n/g, '<br>');
     },
 
     // Download resume as PDF (simplified version)

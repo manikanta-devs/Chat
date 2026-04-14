@@ -1,0 +1,19 @@
+{
+    "name": "DecisionOS – Smart Student Decision Assistant",
+    "short_name": "DecisionOS",
+    "description": "A smart, offline-ready student productivity app with decision flows, focus timer, goal tracker, planner, notes, and resume builder.",
+    "start_url": "./",
+    "display": "standalone",
+    "background_color": "#FFF8F3",
+    "theme_color": "#FF6B4A",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "icon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        }
+    ],
+    "categories": ["education", "productivity"]
+}
