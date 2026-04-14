@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DecisionOS – Smart Student Decision Assistant</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app" class="app-container">
+        <!-- Loading Screen -->
+        <div id="loadingScreen" class="loading-screen">
+            <div class="loading-content">
+                <div class="logo-animate">
+                    <span class="logo-icon">👉</span>
+                    <h1 class="logo-text">DecisionOS</h1>
+                </div>
+                <div class="loading-bar">
+                    <div class="loading-progress"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div id="mainContent" class="main-content hidden">
+            <!-- Header -->
+            <header class="app-header">
+                <div class="header-content">
+                    <div class="logo">
+                        <span class="logo-icon">👉</span>
+                        <span class="logo-text">DecisionOS</span>
+                    </div>
+                    <div class="header-actions">
+                        <button id="themeToggle" class="icon-btn" aria-label="Toggle theme">
+                            <span class="theme-icon">🌙</span>
+                        </button>
+                        <div class="streak-badge">
+                            <span class="streak-icon">🔥</span>
+                            <span id="streakCount">0</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Views -->
+            <main class="app-main">
+                <!-- Home Screen -->
+                <section id="homeView" class="view active">
+                    <div class="welcome-section">
+                        <h2 class="welcome-title">What's on your mind?</h2>
+                        <p class="welcome-subtitle">Choose a challenge and I'll guide you step by step</p>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">⏰</div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="todayFocusTime">0h</div>
+                                <div class="stat-label">Focus Today</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">✅</div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="todayTasksCompleted">0</div>
+                                <div class="stat-label">Tasks Done</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">🎯</div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="activeGoalsCount">0</div>
+                                <div class="stat-label">Active Goals</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Decision Buttons -->
+                    <div class="decision-buttons">
+                        <button class="decision-btn" data-flow="career">
+                            <span class="btn-icon">💼</span>
+                            <span class="btn-text">I am confused about career</span>
+                            <span class="btn-arrow">→</span>
+                        </button>
+                        <button class="decision-btn" data-flow="study">
+                            <span class="btn-icon">📚</span>
+                            <span class="btn-text">I can't study properly</span>
+                            <span class="btn-arrow">→</span>
+                        </button>
+                        <button class="decision-btn" data-flow="focus">
+                            <span class="btn-icon">😴</span>
+                            <span class="btn-text">I can't focus</span>
+                            <span class="btn-arrow">→</span>
+                        </button>
+                        <button class="decision-btn" data-flow="money">
+                            <span class="btn-icon">💰</span>
+                            <span class="btn-text">I want to earn money</span>
+                            <span class="btn-arrow">→</span>
+                        </button>
+                        <button class="decision-btn" data-flow="stress">
+                            <span class="btn-icon">🧠</span>
+                            <span class="btn-text">I feel stressed</span>
+                            <span class="btn-arrow">→</span>
+                        </button>
+                        <button class="decision-btn" data-flow="coding">
+                            <span class="btn-icon">🧑‍💻</span>
+                            <span class="btn-text">I want to learn coding</span>
+                            <span class="btn-arrow">→</span>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Chat View -->
+                <section id="chatView" class="view">
+                    <div class="chat-header">
+                        <button id="backToHome" class="back-btn">
+                            <span>←</span>
+                            <span>Back</span>
+                        </button>
+                        <h3 id="chatTitle" class="chat-title">Decision Chat</h3>
+                    </div>
+                    <div id="chatMessages" class="chat-messages"></div>
+                    <div id="chatOptions" class="chat-options"></div>
+                </section>
+
+                <!-- Planner View -->
+                <section id="plannerView" class="view">
+                    <div class="view-header">
+                        <h3>Smart Planner</h3>
+                        <button id="addTaskBtn" class="primary-btn">+ Add Task</button>
+                    </div>
+                    <div class="planner-content">
+                        <div class="tasks-section">
+                            <h4 class="section-title">Today's Tasks</h4>
+                            <div id="tasksList" class="tasks-list"></div>
+                        </div>
+                        <div class="schedule-section">
+                            <h4 class="section-title">Daily Schedule</h4>
+                            <div id="scheduleList" class="schedule-list"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Focus Timer View -->
+                <section id="timerView" class="view">
+                    <div class="view-header">
+                        <h3>Focus Timer</h3>
+                    </div>
+                    <div class="timer-content">
+                        <div class="timer-display">
+                            <div class="timer-circle">
+                                <svg class="timer-svg" viewBox="0 0 200 200">
+                                    <circle class="timer-bg" cx="100" cy="100" r="90"></circle>
+                                    <circle id="timerProgress" class="timer-progress" cx="100" cy="100" r="90"></circle>
+                                </svg>
+                                <div class="timer-text">
+                                    <div id="timerMinutes" class="timer-minutes">25</div>
+                                    <div class="timer-colon">:</div>
+                                    <div id="timerSeconds" class="timer-seconds">00</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timer-mode">
+                            <button class="mode-btn active" data-mode="focus">Focus (25min)</button>
+                            <button class="mode-btn" data-mode="break">Break (5min)</button>
+                        </div>
+                        <div class="timer-controls">
+                            <button id="timerStart" class="timer-btn primary">Start</button>
+                            <button id="timerPause" class="timer-btn secondary hidden">Pause</button>
+                            <button id="timerReset" class="timer-btn secondary">Reset</button>
+                        </div>
+                        <div class="timer-stats">
+                            <div class="timer-stat">
+                                <span class="stat-label">Sessions Today</span>
+                                <span id="sessionsToday" class="stat-value">0</span>
+                            </div>
+                            <div class="timer-stat">
+                                <span class="stat-label">Total Focus</span>
+                                <span id="totalFocus" class="stat-value">0h 0m</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Notes View -->
+                <section id="notesView" class="view">
+                    <div class="view-header">
+                        <h3>Notes</h3>
+                        <button id="addNoteBtn" class="primary-btn">+ New Note</button>
+                    </div>
+                    <div id="notesList" class="notes-grid"></div>
+                </section>
+
+                <!-- Progress View -->
+                <section id="progressView" class="view">
+                    <div class="view-header">
+                        <h3>Progress Dashboard</h3>
+                    </div>
+                    <div class="progress-content">
+                        <div class="progress-card">
+                            <h4>Weekly Focus Time</h4>
+                            <div class="chart-container">
+                                <canvas id="weeklyChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="progress-card">
+                            <h4>Productivity Score</h4>
+                            <div class="score-display">
+                                <div class="score-circle">
+                                    <svg viewBox="0 0 100 100">
+                                        <circle class="score-bg" cx="50" cy="50" r="45"></circle>
+                                        <circle id="scoreProgress" class="score-progress" cx="50" cy="50" r="45"></circle>
+                                    </svg>
+                                    <span id="productivityScore" class="score-text">0</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="progress-card">
+                            <h4>Recent Achievements</h4>
+                            <div id="achievementsList" class="achievements-list"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Goals View -->
+                <section id="goalsView" class="view">
+                    <div class="view-header">
+                        <h3>Goal Tracker</h3>
+                        <button id="addGoalBtn" class="primary-btn">+ New Goal</button>
+                    </div>
+                    <div id="goalsList" class="goals-list"></div>
+                </section>
+
+                <!-- Resume View -->
+                <section id="resumeView" class="view">
+                    <div class="view-header">
+                        <h3>Resume Builder</h3>
+                        <button id="downloadResume" class="primary-btn">Download PDF</button>
+                    </div>
+                    <div class="resume-builder">
+                        <div class="resume-form">
+                            <div class="form-section">
+                                <h4>Personal Information</h4>
+                                <input type="text" id="resumeName" placeholder="Full Name" class="form-input">
+                                <input type="email" id="resumeEmail" placeholder="Email" class="form-input">
+                                <input type="tel" id="resumePhone" placeholder="Phone" class="form-input">
+                                <textarea id="resumeSummary" placeholder="Professional Summary" class="form-textarea"></textarea>
+                            </div>
+                            <div class="form-section">
+                                <h4>Education</h4>
+                                <textarea id="resumeEducation" placeholder="School/University, Degree, Year" class="form-textarea"></textarea>
+                            </div>
+                            <div class="form-section">
+                                <h4>Skills</h4>
+                                <textarea id="resumeSkills" placeholder="List your skills (comma separated)" class="form-textarea"></textarea>
+                            </div>
+                            <div class="form-section">
+                                <h4>Experience</h4>
+                                <textarea id="resumeExperience" placeholder="Company, Role, Duration, Responsibilities" class="form-textarea"></textarea>
+                            </div>
+                        </div>
+                        <div class="resume-preview">
+                            <div id="resumePreviewContent" class="resume-content">
+                                <div class="resume-header">
+                                    <h2 id="previewName">Your Name</h2>
+                                    <p id="previewContact">email@example.com | +1234567890</p>
+                                </div>
+                                <div class="resume-section">
+                                    <h3>Summary</h3>
+                                    <p id="previewSummary">Your professional summary will appear here...</p>
+                                </div>
+                                <div class="resume-section">
+                                    <h3>Education</h3>
+                                    <p id="previewEducation">Your education details...</p>
+                                </div>
+                                <div class="resume-section">
+                                    <h3>Skills</h3>
+                                    <p id="previewSkills">Your skills...</p>
+                                </div>
+                                <div class="resume-section">
+                                    <h3>Experience</h3>
+                                    <p id="previewExperience">Your experience...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+            <!-- Bottom Navigation -->
+            <nav class="bottom-nav">
+                <button class="nav-btn active" data-view="homeView">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-label">Home</span>
+                </button>
+                <button class="nav-btn" data-view="plannerView">
+                    <span class="nav-icon">📋</span>
+                    <span class="nav-label">Planner</span>
+                </button>
+                <button class="nav-btn" data-view="timerView">
+                    <span class="nav-icon">⏱️</span>
+                    <span class="nav-label">Timer</span>
+                </button>
+                <button class="nav-btn" data-view="notesView">
+                    <span class="nav-icon">📝</span>
+                    <span class="nav-label">Notes</span>
+                </button>
+                <button class="nav-btn" data-view="progressView">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-label">Progress</span>
+                </button>
+                <button class="nav-btn" data-view="goalsView">
+                    <span class="nav-icon">🎯</span>
+                    <span class="nav-label">Goals</span>
+                </button>
+                <button class="nav-btn" data-view="resumeView">
+                    <span class="nav-icon">📄</span>
+                    <span class="nav-label">Resume</span>
+                </button>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Task</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="taskTitle" placeholder="Task title" class="form-input">
+                <input type="time" id="taskTime" class="form-input">
+                <select id="taskPriority" class="form-input">
+                    <option value="low">Low Priority</option>
+                    <option value="medium">Medium Priority</option>
+                    <option value="high">High Priority</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button id="saveTaskBtn" class="primary-btn">Save Task</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="noteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="noteModalTitle">New Note</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="noteTitle" placeholder="Note title" class="form-input">
+                <textarea id="noteContent" placeholder="Write your note..." class="form-textarea"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button id="saveNoteBtn" class="primary-btn">Save Note</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="goalModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>New Goal</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="goalTitle" placeholder="Goal title" class="form-input">
+                <textarea id="goalDescription" placeholder="Describe your goal..." class="form-textarea"></textarea>
+                <input type="date" id="goalDeadline" class="form-input">
+            </div>
+            <div class="modal-footer">
+                <button id="saveGoalBtn" class="primary-btn">Save Goal</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="data/knowledge.js"></script>
+    <script src="modules/storage.js"></script>
+    <script src="modules/chat.js"></script>
+    <script src="modules/planner.js"></script>
+    <script src="modules/timer.js"></script>
+    <script src="modules/notes.js"></script>
+    <script src="modules/progress.js"></script>
+    <script src="modules/goals.js"></script>
+    <script src="modules/resume.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
