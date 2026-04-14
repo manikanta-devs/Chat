@@ -14,6 +14,13 @@ const Storage = {
     },
 
     // Generic get/set/remove
+    _generateId() {
+        if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+            return crypto.randomUUID();
+        }
+        return Date.now().toString(36) + Math.random().toString(36).slice(2);
+    },
+
     get(key) {
         try {
             const data = localStorage.getItem(key);
@@ -55,7 +62,7 @@ const Storage = {
 
     addTask(task) {
         const tasks = this.getTasks();
-        task.id = Date.now().toString();
+        task.id = this._generateId();
         task.createdAt = new Date().toISOString();
         task.completed = false;
         tasks.push(task);
@@ -92,7 +99,7 @@ const Storage = {
 
     addNote(note) {
         const notes = this.getNotes();
-        note.id = Date.now().toString();
+        note.id = this._generateId();
         note.createdAt = new Date().toISOString();
         note.updatedAt = new Date().toISOString();
         notes.unshift(note);
@@ -129,7 +136,7 @@ const Storage = {
 
     addGoal(goal) {
         const goals = this.getGoals();
-        goal.id = Date.now().toString();
+        goal.id = this._generateId();
         goal.createdAt = new Date().toISOString();
         goal.progress = goal.progress || 0;
         goals.push(goal);

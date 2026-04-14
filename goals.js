@@ -74,14 +74,16 @@ const Goals = {
 
         goalsList.innerHTML = goals.map(goal => {
             const deadlineStr = goal.deadline ? new Date(goal.deadline).toLocaleDateString() : 'No deadline';
-            
+            const safeTitle = escapeHtml(goal.title);
+            const safeDescription = escapeHtml(goal.description);
+
             return `
                 <div class="goal-card">
                     <div class="goal-header">
-                        <div class="goal-title">${goal.title}</div>
+                        <div class="goal-title">${safeTitle}</div>
                         <button class="goal-delete" onclick="Goals.deleteGoal('${goal.id}')">&times;</button>
                     </div>
-                    ${goal.description ? `<div class="goal-description">${goal.description}</div>` : ''}
+                    ${goal.description ? `<div class="goal-description">${safeDescription}</div>` : ''}
                     <div class="goal-progress">
                         <div class="progress-bar-container">
                             <div class="progress-bar" style="width: ${goal.progress}%"></div>

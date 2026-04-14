@@ -637,44 +637,52 @@ const KNOWLEDGE_BASE = {
 
 // Utility function to match user answers to knowledge base keys
 function getResultKey(answers, flow) {
-    const keys = Object.keys(answers).sort();
-    const values = keys.map(k => answers[k]).filter(v => v);
-    
+    const flowData = KNOWLEDGE_BASE[flow];
+
+    // Build values in question order (matching how knowledge base keys are constructed)
+    let values;
+    if (flowData.flow) {
+        values = flowData.flow.map(q => answers[q.id]).filter(v => v);
+    } else {
+        values = Object.values(answers).filter(v => v);
+    }
+
     // Try exact match first
     const exactKey = values.join('-');
-    if (KNOWLEDGE_BASE[flow].results && KNOWLEDGE_BASE[flow].results[exactKey]) {
+    if (flowData.results && flowData.results[exactKey]) {
         return exactKey;
     }
-    if (KNOWLEDGE_BASE[flow].plans && KNOWLEDGE_BASE[flow].plans[exactKey]) {
+    if (flowData.plans && flowData.plans[exactKey]) {
         return exactKey;
     }
-    if (KNOWLEDGE_BASE[flow].solutions && KNOWLEDGE_BASE[flow].solutions[exactKey]) {
+    if (flowData.solutions && flowData.solutions[exactKey]) {
         return exactKey;
     }
-    if (KNOWLEDGE_BASE[flow].opportunities && KNOWLEDGE_BASE[flow].opportunities[exactKey]) {
+    if (flowData.opportunities && flowData.opportunities[exactKey]) {
         return exactKey;
     }
-    if (KNOWLEDGE_BASE[flow].paths && KNOWLEDGE_BASE[flow].paths[exactKey]) {
+    if (flowData.paths && flowData.paths[exactKey]) {
         return exactKey;
     }
-    
-    // Try partial matches
+
+    // Try partial matches: check if all parts of a KB key are present in the answer values
     const allKeys = Object.keys(
-        KNOWLEDGE_BASE[flow].results || 
-        KNOWLEDGE_BASE[flow].plans || 
-        KNOWLEDGE_BASE[flow].solutions ||
-        KNOWLEDGE_BASE[flow].opportunities ||
-        KNOWLEDGE_BASE[flow].paths ||
+        flowData.results ||
+        flowData.plans ||
+        flowData.solutions ||
+        flowData.opportunities ||
+        flowData.paths ||
         {}
     );
-    
+
     for (const key of allKeys) {
+        if (key === 'default') continue;
         const keyParts = key.split('-');
-        if (values.every(v => keyParts.includes(v))) {
+        if (keyParts.every(part => values.includes(part))) {
             return key;
         }
     }
-    
+
     // Return default
     return 'default';
 }

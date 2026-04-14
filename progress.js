@@ -27,6 +27,21 @@ const Progress = {
         const barWidth = chartWidth / data.length - 10;
         const maxValue = Math.max(...data, 120); // minimum 120 minutes scale
 
+        // Polyfill for roundRect if not available
+        if (!ctx.roundRect) {
+            ctx.roundRect = function(x, y, width, height, radii) {
+                this.beginPath();
+                this.moveTo(x + radii[0], y);
+                this.lineTo(x + width - radii[1], y);
+                this.arcTo(x + width, y, x + width, y + radii[1], radii[1]);
+                this.lineTo(x + width, y + height);
+                this.lineTo(x, y + height);
+                this.lineTo(x, y + radii[0]);
+                this.arcTo(x, y, x + radii[0], y, radii[0]);
+                this.closePath();
+            };
+        }
+
         // Clear canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -62,21 +77,6 @@ const Progress = {
             ctx.textAlign = 'center';
             ctx.fillText(labels[index], x + barWidth / 2, canvas.height - 10);
         });
-
-        // Polyfill for roundRect if not available
-        if (!ctx.roundRect) {
-            ctx.roundRect = function(x, y, width, height, radii) {
-                this.beginPath();
-                this.moveTo(x + radii[0], y);
-                this.lineTo(x + width - radii[1], y);
-                this.arcTo(x + width, y, x + width, y + radii[1], radii[1]);
-                this.lineTo(x + width, y + height);
-                this.lineTo(x, y + height);
-                this.lineTo(x, y + radii[0]);
-                this.arcTo(x, y, x + radii[0], y, radii[0]);
-                this.closePath();
-            };
-        }
     },
 
     // Render productivity score
